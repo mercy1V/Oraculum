@@ -23,7 +23,7 @@ const functions = {
         title: 'Совместимость по дате рождения',
         description: 'Получите анализ совместимости двух людей на основе их дат рождения. Разбейте анализ на пункты: Эмоциональная связь, Интеллектуальное взаимопонимание, Физическая гармония. Для каждого пункта дадим краткий анализ и конкретные советы.',
         inputs: ['userBirthDate', 'partnerBirthDate'],
-        icon: '💕',
+        icon: '💞',
         generateButtonText: 'Проверить совместимость по дате рождения'
     },
     numerology: {
@@ -982,11 +982,6 @@ const App = () => {
     }, [generatedContent]);
 
 
-    // ВНИЦИМАНИЕ: Для локального запуска проекта, ВСТАВЬТЕ СВОЙ API-КЛЮЧ ЗДЕСЬ.
-    // НИКОГДА НЕ РАЗМЕЩАЙТЕ API-КЛЮЧИ НАПРЯМУЮ В КЛИЕНТСКОМ КОДЕ В ПРОДАКШН-ПРИЛОЖЕНИЯХ!
-    // Для продакшна используйте бэкенд-прокси или переменные окружения, как описано ранее.
-    const apiKey = "AIzaSyByL6L_lTZIozrLRUu8SbAYhY6Fv-01yjM"; // <-- ВАШ API КЛЮЧ ЗДЕСЬ!
-
     // Функция для выбора случайного сообщения загрузки
     const getRandomLoadingMessage = () => {
         return loadingMessages[Math.floor(Math.random() * loadingMessages.length)];
@@ -1044,15 +1039,14 @@ const App = () => {
         setShowFullContentModal(false); // Reset to hide full content modal on new generation
 
         try {
-            let chatHistory = [];
-            chatHistory.push({ role: "user", parts: [{ text: prompt }] });
-            const payload = { contents: chatHistory };
-
-            if (!apiKey || apiKey === "YOUR_GOOGLE_GEMINI_API_KEY_HERE") {
-                throw new Error("API Key не настроен. Пожалуйста, вставьте ваш ключ в код для локального запуска.");
-            }
-
+            // Ваш API-ключ, который теперь используется напрямую в фронтенде.
+            // ВНИМАНИЕ: Это небезопасно для публичных проектов.
+            const apiKey = "AIzaSyByL6L_lTZIozrLRUu8SbAYhY6Fv-01yjM";
             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+            const payload = {
+                contents: [{ role: "user", parts: [{ text: prompt }] }]
+            };
 
             const response = await fetch(apiUrl, {
                 method: 'POST',
@@ -1062,7 +1056,8 @@ const App = () => {
 
             if (!response.ok) {
                 const errorData = await response.json();
-                throw new Error(`Ошибка API: ${errorData.error.message || response.statusText}`);
+                console.error('Gemini API Error:', errorData);
+                throw new Error(`Gemini API Error: ${errorData.error?.message || response.statusText}`);
             }
 
             const result = await response.json();
@@ -1072,13 +1067,13 @@ const App = () => {
                 result.candidates[0].content.parts.length > 0) {
                 const text = result.candidates[0].content.parts[0].text;
                 setGeneratedContent(text);
-                setContentKey(prevKey => prevKey + 1); // Trigger text reveal animation
+                setContentKey(prevKey => prevKey + 1);
             } else {
                 setGeneratedContent('Не удалось сгенерировать контент. Попробуйте еще раз.');
             }
         } catch (error) {
             console.error('Ошибка при вызове API:', error);
-            setErrorMessage(thematicErrorMessages.apiError); // Используем тематическое сообщение для ошибки API
+            setErrorMessage(thematicErrorMessages.apiError);
         } finally {
             setIsLoading(false);
         }
@@ -1114,7 +1109,7 @@ const App = () => {
                 if (userBirthDate && partnerBirthDate) {
                     // Removed compatibility percentage logic
                 } else if (!userBirthDate || !partnerBirthDate) {
-                    inputErrors.userBirthDate = thematicErrorMessages.partnerBirthDate; // Reusing for "both dates" scenario
+                    inputErrors.userBirthDate = thematicErrorMessages.partnerBirthDates; // Reusing for "both dates" scenario
                 }
                 prompt = `Оцени совместимость двух людей с датами рождения '${userBirthDate}' и '${partnerBirthDate}' с точки зрения астрологии и нумерологии. Разбей анализ на пункты: Эмоциональная связь, Интеллектуальное взаимопонимание, Физическая гармония. Для каждого пункта дай краткий анализ и конкретные советы. Ответь простым текстом, без Markdown.`;
                 break;
@@ -1736,7 +1731,7 @@ const App = () => {
 
                 {/* Moved title outside the crystal ball */}
                 <h1 className={`absolute top-10 sm:top-16 text-2xl sm:text-3xl font-bold ${themes[currentTheme].h1Color} drop-shadow-lg text-center px-4 z-0`}>
-                    🔮 Твой Прогноз 🌟
+                    🔮 Генератор Прогнозов 🌟
                 </h1>
 
                 {/* Crystal Ball and Stand Wrapper (now just the ball) */}
