@@ -1864,7 +1864,7 @@ const App = () => {
 
                 {/* Moved title outside the crystal ball */}
                 <h1 className={`absolute top-10 sm:top-16 text-2xl sm:text-3xl font-bold ${themes[currentTheme].h1Color} drop-shadow-lg text-center px-4 z-0`}>
-                    🔮 Генератор Прогнозов 🌟
+                    🔮 Твой Прогноз 🌟
                 </h1>
 
                 {/* Crystal Ball and Stand Wrapper (now just the ball) */}
