@@ -119,7 +119,7 @@ const functions = {
         title: 'Проверка биоритмов',
         description: 'Введите вашу дату рождения, чтобы получить информацию о текущих физическом, эмоциональном и интеллектуальном циклах.',
         inputs: ['userBirthDate'],
-        icon: '�',
+        icon: '📈',
         generateButtonText: 'Проверить биоритмы'
     },
     positiveFocus: {
@@ -376,6 +376,13 @@ const GlobalStyles = () => (
             justify-content: center;
             position: relative;
             overflow-x: hidden; /* Ensure hidden elements are not visible */
+            padding: 0 1rem; /* Added padding for mobile */
+        }
+
+        @media (min-width: 640px) { /* Styles for small screens and up (sm breakpoint) */
+            .carousel-container {
+                padding: 0 2rem; /* Increased padding for desktop */
+            }
         }
 
         .carousel-track {
@@ -575,17 +582,24 @@ const GlobalStyles = () => (
             border: 1px solid; /* Add a subtle border */
             backdrop-filter: blur(5px); /* Stronger blur for a mystical feel */
             -webkit-backdrop-filter: blur(5px); /* For Safari */
-            left: 0.2rem; /* Default position for mobile */
-            right: 0.2rem; /* Default position for mobile */
+        }
+
+        /* Adjusted positions for mobile */
+        .carousel-arrow-button.left-arrow {
+            left: 0.5rem; /* Slightly more space for mobile */
+        }
+
+        .carousel-arrow-button.right-arrow {
+            right: 0.5rem; /* Slightly more space for mobile */
         }
 
         @media (min-width: 640px) { /* Styles for small screens and up (sm breakpoint) */
             .carousel-arrow-button.left-arrow {
-                left: 0.5rem; /* Position from left for desktop */
+                left: 1rem; /* Position from left for desktop */
             }
 
             .carousel-arrow-button.right-arrow {
-                right: 0.5rem; /* Position from right for desktop */
+                right: 1rem; /* Position from right for desktop */
             }
         }
 
@@ -968,6 +982,7 @@ const App = () => {
     const [isCrystalBallActive, setIsCrystalBallActive] = useState(false); // For touch effect
     const [contentFontSizeClass, setContentFontSizeClass] = useState('text-base'); // Dynamic font size state
     const [showFullContentModal, setShowFullContentModal] = useState(false); // New state for "read more" modal
+    const [touchStartX, setTouchStartX] = useState(0); // For touch swipe
 
     // Carousel state for infinite scroll
     const actualFunctions = Object.values(functions);
@@ -1257,6 +1272,23 @@ const App = () => {
         setCurrentPage((prevPage) => prevPage - 1);
     };
 
+    // Touch handlers for carousel swipe
+    const handleTouchStart = (e) => {
+        setTouchStartX(e.touches[0].clientX);
+    };
+
+    const handleTouchEnd = (e) => {
+        const touchEndX = e.changedTouches[0].clientX;
+        const swipeDistance = touchEndX - touchStartX;
+        const swipeThreshold = 50; // Minimum distance for a swipe
+
+        if (swipeDistance > swipeThreshold) {
+            goToPrevPage();
+        } else if (swipeDistance < -swipeThreshold) {
+            goToNextPage();
+        }
+    };
+
     // Function to get a summary (first 3 sentences)
     const getSummary = (text) => {
         if (!text) return '';
@@ -1266,7 +1298,11 @@ const App = () => {
 
 
     const renderMainMenu = () => (
-        <div className="carousel-container">
+        <div
+            className="carousel-container"
+            onTouchStart={handleTouchStart} // Add touch event listener
+            onTouchEnd={handleTouchEnd}     // Add touch event listener
+        >
             <div
                 className="carousel-track"
                 style={{
@@ -1378,7 +1414,7 @@ const App = () => {
                                 <input
                                     type="text"
                                     id="partnerName"
-                                    className={`w-full px-3 py-2 rounded-lg ${themes[currentTheme].inputBg} ${themes[currentTheme].inputBorder} border ${hasThematicError("partnerName") ? 'border-red-500' : ''} ${themes[currentCurrentTheme].inputFocusRing} ${themes[currentTheme].inputPlaceholder} ${themes[currentTheme].textColor} transition-all duration-300 ease-in-out`}
+                                    className={`w-full px-3 py-2 rounded-lg ${themes[currentTheme].inputBg} ${themes[currentTheme].inputBorder} border ${hasThematicError("partnerName") ? 'border-red-500' : ''} ${themes[currentTheme].inputFocusRing} ${themes[currentTheme].inputPlaceholder} ${themes[currentTheme].textColor} transition-all duration-300 ease-in-out`}
                                     placeholder="Например, Иван"
                                     value={partnerName}
                                     onChange={(e) => setPartnerName(e.target.value)}
