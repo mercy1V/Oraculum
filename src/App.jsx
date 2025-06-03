@@ -398,10 +398,10 @@ const GlobalStyles = () => (
 
         /* Responsive adjustments for buttons */
         .carousel-page button {
-            width: 234px; /* Fixed width for desktop (180 * 1.3) */
-            height: 325px; /* Fixed height for desktop (250 * 1.3) */
-            padding: 1rem; /* Adjusted padding for smaller card */
-            font-size: 1rem; /* Base font size */
+            width: 180px; /* Default width for mobile */
+            height: 250px; /* Default height for mobile */
+            padding: 0.8rem; /* Adjusted padding for smaller card */
+            font-size: 0.9rem; /* Base font size */
             border: 1px solid; /* Add a subtle border */
             backdrop-filter: blur(3px); /* Add a subtle blur effect */
             -webkit-backdrop-filter: blur(3px); /* For Safari */
@@ -418,27 +418,55 @@ const GlobalStyles = () => (
             flex-shrink: 0; /* Explicitly prevent shrinking */
             flex-grow: 0; /* Changed to 0, or removed, to rely on fixed dimensions */
         }
+
+        @media (min-width: 640px) { /* Styles for small screens and up (sm breakpoint) */
+            .carousel-page button {
+                width: 234px; /* Larger width for desktop (180 * 1.3) */
+                height: 325px; /* Larger height for desktop (250 * 1.3) */
+                padding: 1rem; /* Adjusted padding for larger card */
+                font-size: 1rem; /* Larger font size */
+            }
+        }
+
         .carousel-page button::-webkit-scrollbar {
             display: none; /* Chrome, Safari, Opera */
         }
 
         .carousel-page button span:first-child { /* Icon */
-            font-size: 2rem; /* Adjusted icon size */
+            font-size: 1.8rem; /* Adjusted icon size for mobile */
             margin-bottom: 0.4rem; /* Space between icon and title */
         }
+        @media (min-width: 640px) {
+            .carousel-page button span:first-child {
+                font-size: 2rem; /* Larger icon size for desktop */
+            }
+        }
+
         .carousel-page button span:nth-child(2) { /* Title */
-            font-size: 1rem; /* Adjusted title size */
+            font-size: 0.9rem; /* Adjusted title size for mobile */
             font-weight: bold;
             margin-bottom: 0.4rem; /* Space between title and description */
             line-height: 1.2;
             width: 100%; /* Ensure it takes full width for left alignment */
         }
+        @media (min-width: 640px) {
+            .carousel-page button span:nth-child(2) {
+                font-size: 1rem; /* Larger title size for desktop */
+            }
+        }
+
         .carousel-page button span:last-child { /* Description */
-            font-size: 0.75rem; /* Adjusted description size */
+            font-size: 0.7rem; /* Adjusted description size for mobile */
             line-height: 1.4;
             opacity: 0.9; /* Slightly less prominent */
             width: 100%; /* Ensure it takes full width for left alignment */
         }
+        @media (min-width: 640px) {
+            .carousel-page button span:last-child {
+                font-size: 0.75rem; /* Larger description size for desktop */
+            }
+        }
+
 
         .carousel-page button:hover {
             transform: scale(1.02); /* Slightly less scale on hover for large button */
@@ -748,7 +776,7 @@ const GlobalStyles = () => (
             transform: scale(1.2);
         }
 
-        /* Northern Lights background */
+        /* Northern Lights background layer */
         .northern-lights-bg {
             position: fixed;
             inset: 0;
@@ -1731,7 +1759,7 @@ const App = () => {
 
                 {/* Moved title outside the crystal ball */}
                 <h1 className={`absolute top-10 sm:top-16 text-2xl sm:text-3xl font-bold ${themes[currentTheme].h1Color} drop-shadow-lg text-center px-4 z-0`}>
-                    🔮 Генератор Прогнозов 🌟
+                    🔮 Твой Прогноз 🌟
                 </h1>
 
                 {/* Crystal Ball and Stand Wrapper (now just the ball) */}
