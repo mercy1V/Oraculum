@@ -23,7 +23,7 @@ const functions = {
         title: 'Совместимость по дате рождения',
         description: 'Получите анализ совместимости двух людей на основе их дат рождения. Разбейте анализ на пункты: Эмоциональная связь, Интеллектуальное взаимопонимание, Физическая гармония. Для каждого пункта дадим краткий анализ и конкретные советы.',
         inputs: ['userBirthDate', 'partnerBirthDate'],
-        icon: '💕',
+        icon: '💞',
         generateButtonText: 'Проверить совместимость по дате рождения'
     },
     numerology: {
@@ -238,7 +238,7 @@ const themes = {
 };
 
 // CSS Keyframes for global animations
-const GlobalStyles = () => (
+const GlobalStyles = ({ isLowGraphicsMode }) => (
     <style>
         {`
         @keyframes background-shift {
@@ -251,6 +251,11 @@ const GlobalStyles = () => (
             background-size: 400% 400%; /* Make gradient larger than screen */
             animation: background-shift 15s infinite alternate; /* Slower, more subtle animation */
         }
+        ${isLowGraphicsMode ? `
+        .background-animated {
+            animation: background-shift 30s infinite alternate; /* Slower for low graphics */
+        }
+        ` : ''}
 
         /* Pulsing glow animations for crystal ball */
         @keyframes pulse-dark-glow {
@@ -319,6 +324,11 @@ const GlobalStyles = () => (
             transform: scale(1.02);
             box-shadow: 0 0 40px rgba(255,255,255,0.3), var(--crystal-ball-shadow-start); /* Enhanced glow on touch */
         }
+        ${isLowGraphicsMode ? `
+        .crystal-ball {
+            animation: none !important; /* Disable pulsing glow for low graphics */
+        }
+        ` : ''}
 
         .crystal-ball-content-wrapper {
             flex-grow: 0; /* Ensures content does not stretch, relies on justify-content: center */
@@ -779,6 +789,12 @@ const GlobalStyles = () => (
             animation: star-field-pan 60s linear infinite; /* Slower animation */
             opacity: 0.3;
         }
+        ${isLowGraphicsMode ? `
+        .background-elements {
+            opacity: 0.1;
+            animation: star-field-pan 120s linear infinite;
+        }
+        ` : ''}
 
         .background-elements.layer-2 {
             background-size: 150px 150px; /* Smaller pattern for faster movement (closer) */
@@ -786,6 +802,12 @@ const GlobalStyles = () => (
             opacity: 0.2;
             transform: scale(1.1); /* Slightly larger to enhance depth */
         }
+        ${isLowGraphicsMode ? `
+        .background-elements.layer-2 {
+            opacity: 0.05;
+            animation: star-field-pan 90s linear infinite;
+        }
+        ` : ''}
 
         .background-elements.layer-3 {
             background-size: 100px 100px; /* Even smaller/faster */
@@ -793,6 +815,12 @@ const GlobalStyles = () => (
             opacity: 0.15;
             transform: scale(1.2);
         }
+        ${isLowGraphicsMode ? `
+        .background-elements.layer-3 {
+            opacity: 0.02;
+            animation: star-field-pan 60s linear infinite;
+        }
+        ` : ''}
 
         /* Northern Lights background layer */
         .northern-lights-bg {
@@ -813,6 +841,13 @@ const GlobalStyles = () => (
             opacity: 0.4; /* Base opacity */
             pointer-events: none; /* Allow clicks to pass through */
         }
+        ${isLowGraphicsMode ? `
+        .northern-lights-bg {
+            opacity: 0.1;
+            filter: blur(20px) brightness(1.0);
+            animation: aurora-move 80s linear infinite, aurora-color 40s ease-in-out infinite alternate;
+        }
+        ` : ''}
 
         /* Vignette effect */
         .vignette {
@@ -822,6 +857,11 @@ const GlobalStyles = () => (
             z-index: 40;
             pointer-events: none; /* Allows clicks to pass through */
         }
+        ${isLowGraphicsMode ? `
+        .vignette {
+            background: radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.3) 75%);
+        }
+        ` : ''}
 
         /* Full content modal styles */
         .full-content-modal-overlay {
@@ -984,6 +1024,7 @@ const App = () => {
     const [showFullContentModal, setShowFullContentModal] = useState(false); // New state for "read more" modal
     const [touchStartX, setTouchStartX] = useState(0); // For touch swipe
     const [isTouchDevice, setIsTouchDevice] = useState(false); // New state for touch device detection
+    const [isLowGraphicsMode, setIsLowGraphicsMode] = useState(false); // New state for low graphics mode
 
     // Carousel state for infinite scroll
     const actualFunctions = Object.values(functions);
@@ -1716,9 +1757,13 @@ const App = () => {
         setCurrentTheme(themeKeys[nextIndex]);
     };
 
+    const toggleLowGraphicsMode = () => {
+        setIsLowGraphicsMode(prev => !prev);
+    };
+
     return (
         <>
-            <GlobalStyles /> {/* Inject global CSS animations */}
+            <GlobalStyles isLowGraphicsMode={isLowGraphicsMode} /> {/* Pass isLowGraphicsMode prop */}
             {/* SVG filter for micro-cracks/imperfections */}
             <svg width="0" height="0" style={{ position: 'absolute', zIndex: -1 }}>
                 <filter id="noiseFilter">
@@ -1787,6 +1832,17 @@ const App = () => {
                                     >
                                         О проекте ℹ️
                                     </button>
+                                    {/* Кнопка для переключения режима графики */}
+                                    <button
+                                        onClick={toggleLowGraphicsMode}
+                                        className={`
+                                            ${themes[currentTheme].textColor} block w-full text-left px-4 py-2 text-sm
+                                            hover:bg-opacity-20 hover:bg-white border-t border-gray-700 mt-1 pt-2 transition-colors duration-200 ease-in-out
+                                        `}
+                                        role="menuitem"
+                                    >
+                                        {isLowGraphicsMode ? 'Высокая графика 🚀' : 'Низкая графика 🐢'}
+                                    </button>
                                 </div>
                             </div>
                         )}
@@ -1808,14 +1864,14 @@ const App = () => {
 
                 {/* Moved title outside the crystal ball */}
                 <h1 className={`absolute top-10 sm:top-16 text-2xl sm:text-3xl font-bold ${themes[currentTheme].h1Color} drop-shadow-lg text-center px-4 z-0`}>
-                    🔮 Твой Прогноз 🌟
+                    🔮 Генератор Прогнозов 🌟
                 </h1>
 
                 {/* Crystal Ball and Stand Wrapper (now just the ball) */}
                 <div className="crystal-ball-and-stand-wrapper">
                     <div className={`
                         crystal-ball
-                        ${themes[currentTheme].crystalBallAnimation ? `animate-[${themes[currentTheme].crystalBallAnimation}_4s_infinite_alternate]` : ''}
+                        ${themes[currentTheme].crystalBallAnimation && !isLowGraphicsMode ? `animate-[${themes[currentTheme].crystalBallAnimation}_4s_infinite_alternate]` : ''}
                         ${isCrystalBallActive ? 'touch-active' : ''}
                         `}
                         style={{
