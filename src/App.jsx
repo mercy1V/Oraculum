@@ -23,7 +23,7 @@ const functions = {
         title: 'Совместимость по дате рождения',
         description: 'Получите анализ совместимости двух людей на основе их дат рождения. Разбейте анализ на пункты: Эмоциональная связь, Интеллектуальное взаимопонимание, Физическая гармония. Для каждого пункта дадим краткий анализ и конкретные советы.',
         inputs: ['userBirthDate', 'partnerBirthDate'],
-        icon: '💞',
+        icon: '💕',
         generateButtonText: 'Проверить совместимость по дате рождения'
     },
     numerology: {
@@ -983,6 +983,7 @@ const App = () => {
     const [contentFontSizeClass, setContentFontSizeClass] = useState('text-base'); // Dynamic font size state
     const [showFullContentModal, setShowFullContentModal] = useState(false); // New state for "read more" modal
     const [touchStartX, setTouchStartX] = useState(0); // For touch swipe
+    const [isTouchDevice, setIsTouchDevice] = useState(false); // New state for touch device detection
 
     // Carousel state for infinite scroll
     const actualFunctions = Object.values(functions);
@@ -994,6 +995,13 @@ const App = () => {
     ];
     const [currentPage, setCurrentPage] = useState(1); // Start at the first actual function
     const [allowTransition, setAllowTransition] = useState(true); // Controls CSS transition
+
+    // Effect to detect touch device
+    useEffect(() => {
+        // Check if touch events are supported
+        const hasTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0);
+        setIsTouchDevice(hasTouch);
+    }, []);
 
     // Effect to handle snapping for infinite scroll
     useEffect(() => {
@@ -1326,7 +1334,8 @@ const App = () => {
                     </div>
                 ))}
             </div>
-            {actualFunctions.length > 1 && ( // Only show arrows if there's more than one actual function
+            {/* Conditionally render arrows based on whether it's a touch device */}
+            {!isTouchDevice && actualFunctions.length > 1 && (
                 <>
                     <button onClick={goToPrevPage} className={`carousel-arrow-button left-arrow ${currentTheme}`}>
                         <svg className="carousel-arrow-svg" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
