@@ -119,7 +119,7 @@ const functions = {
         title: 'Проверка биоритмов',
         description: 'Введите вашу дату рождения, чтобы получить информацию о текущих физическом, эмоциональном и интеллектуальном циклах.',
         inputs: ['userBirthDate'],
-        icon: '📈',
+        icon: '�',
         generateButtonText: 'Проверить биоритмы'
     },
     positiveFocus: {
@@ -575,19 +575,23 @@ const GlobalStyles = () => (
             border: 1px solid; /* Add a subtle border */
             backdrop-filter: blur(5px); /* Stronger blur for a mystical feel */
             -webkit-backdrop-filter: blur(5px); /* For Safari */
+            left: 0.2rem; /* Default position for mobile */
+            right: 0.2rem; /* Default position for mobile */
+        }
+
+        @media (min-width: 640px) { /* Styles for small screens and up (sm breakpoint) */
+            .carousel-arrow-button.left-arrow {
+                left: 0.5rem; /* Position from left for desktop */
+            }
+
+            .carousel-arrow-button.right-arrow {
+                right: 0.5rem; /* Position from right for desktop */
+            }
         }
 
         .carousel-arrow-button:hover {
             transform: translateY(-50%) scale(1.1); /* Slightly larger on hover */
             box-shadow: 0 0 15px rgba(255, 255, 255, 0.3); /* Subtle white glow on hover */
-        }
-
-        .carousel-arrow-button.left-arrow {
-            left: 0.5rem; /* Position from left */
-        }
-
-        .carousel-arrow-button.right-arrow {
-            right: 0.5rem; /* Position from right */
         }
 
         .carousel-arrow-svg {
@@ -1374,7 +1378,7 @@ const App = () => {
                                 <input
                                     type="text"
                                     id="partnerName"
-                                    className={`w-full px-3 py-2 rounded-lg ${themes[currentTheme].inputBg} ${themes[currentTheme].inputBorder} border ${hasThematicError("partnerName") ? 'border-red-500' : ''} ${themes[currentTheme].inputFocusRing} ${themes[currentTheme].inputPlaceholder} ${themes[currentTheme].textColor} transition-all duration-300 ease-in-out`}
+                                    className={`w-full px-3 py-2 rounded-lg ${themes[currentTheme].inputBg} ${themes[currentTheme].inputBorder} border ${hasThematicError("partnerName") ? 'border-red-500' : ''} ${themes[currentCurrentTheme].inputFocusRing} ${themes[currentTheme].inputPlaceholder} ${themes[currentTheme].textColor} transition-all duration-300 ease-in-out`}
                                     placeholder="Например, Иван"
                                     value={partnerName}
                                     onChange={(e) => setPartnerName(e.target.value)}
